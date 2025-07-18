@@ -290,6 +290,6 @@ Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](L
 
 ## Contacto
 
-Felix Rafael Sanchez - felix.sanchez@example.com
+Felix Rafael Sanchez - felix_sanchez@hotmail.com
 
-Enlace del proyecto: [https://github.com/tu-usuario/StudentTest](https://github.com/tu-usuario/StudentTest)
+Enlace del proyecto: [https://github.com/felxsf/StudentTest](https://github.com/tu-usuario/StudentTest)
