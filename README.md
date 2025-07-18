@@ -193,10 +193,10 @@ Authorization: Bearer {token}
 
 La aplicación usa Azure SQL Database con la siguiente cadena de conexión:
 ```
-Server=tcp:ferasfdev.database.windows.net,1433;
+Server=tcp:.database.windows.net,1433;
 Initial Catalog=StudentTestDB;
-User ID=ferasf;
-Password=Contraseña2025*;
+User ID=;
+Password=;
 Encrypt=True;
 TrustServerCertificate=False;
 ```
