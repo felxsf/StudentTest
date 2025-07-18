@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Logs de Prueba - StudentTest</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .log-generator {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .log-type-card {
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .log-type-card:hover {
+            transform: translateY(-2px);
+        }
+        .log-type-card.selected {
+            border-color: #0d6efd;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row bg-primary text-white p-3 mb-4">
+            <div class="col">
+                <h1><i class="fas fa-bug"></i> Generador de Logs de Prueba</h1>
+                <p class="mb-0">Herramienta para generar logs de prueba para el dashboard</p>
+            </div>
+        </div>
+
+        <div class="log-generator">
+            <!-- Configuración -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-cog"></i> Configuración</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">URL de la API</label>
+                            <input type="text" id="apiUrl" class="form-control" value="https://localhost:7001/api" placeholder="URL de la API">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Token JWT (opcional)</label>
+                            <input type="text" id="jwtToken" class="form-control" placeholder="Token JWT para autenticación">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tipos de Logs -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-list"></i> Tipos de Logs</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card log-type-card" onclick="selectLogType('information')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-info-circle fa-2x text-info mb-2"></i>
+                                    <h6>Information</h6>
+                                    <small>Logs informativos del sistema</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card log-type-card" onclick="selectLogType('warning')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-exclamation-triangle fa-2x text-warning mb-2"></i>
+                                    <h6>Warning</h6>
+                                    <small>Advertencias del sistema</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card log-type-card" onclick="selectLogType('error')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
+                                    <h6>Error</h6>
+                                    <small>Errores del sistema</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card log-type-card" onclick="selectLogType('security')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
+                                    <h6>Security</h6>
+                                    <small>Eventos de seguridad</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card log-type-card" onclick="selectLogType('performance')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-tachometer-alt fa-2x text-primary mb-2"></i>
+                                    <h6>Performance</h6>
+                                    <small>Métricas de rendimiento</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card log-type-card" onclick="selectLogType('audit')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-clipboard-check fa-2x text-secondary mb-2"></i>
+                                    <h6>Audit</h6>
+                                    <small>Logs de auditoría</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuración Avanzada -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-sliders-h"></i> Configuración Avanzada</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Cantidad de Logs</label>
+                            <input type="number" id="logCount" class="form-control" value="10" min="1" max="100">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Usuario ID</label>
+                            <input type="text" id="userId" class="form-control" value="admin" placeholder="ID del usuario">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Mensaje Personalizado</label>
+                            <input type="text" id="customMessage" class="form-control" placeholder="Mensaje personalizado (opcional)">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">IP Address</label>
+                            <input type="text" id="ipAddress" class="form-control" value="127.0.0.1" placeholder="Dirección IP">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-primary" onclick="generateLogs()">
+                            <i class="fas fa-play"></i> Generar Logs
+                        </button>
+                        <button class="btn btn-success" onclick="generateAllTypes()">
+                            <i class="fas fa-magic"></i> Generar Todos los Tipos
+                        </button>
+                        <button class="btn btn-warning" onclick="generateBulkLogs()">
+                            <i class="fas fa-database"></i> Generar Bulk (50 logs)
+                        </button>
+                        <button class="btn btn-info" onclick="openDashboard()">
+                            <i class="fas fa-chart-line"></i> Abrir Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultados -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-list-alt"></i> Resultados</h5>
+                </div>
+                <div class="card-body">
+                    <div id="results" class="alert alert-info">
+                        Los resultados aparecerán aquí después de generar logs.
+                    </div>
+                    <div id="logDetails" style="display: none;">
+                        <h6>Detalles de los Logs Generados:</h6>
+                        <div id="logList" class="border p-3 bg-light" style="max-height: 300px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedLogType = 'information';
+        let generatedLogs = [];
+
+        // Seleccionar tipo de log
+        function selectLogType(type) {
+            selectedLogType = type;
+            
+            // Remover selección anterior
+            document.querySelectorAll('.log-type-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Seleccionar nueva tarjeta
+            event.currentTarget.classList.add('selected');
+        }
+
+        // Mensajes de ejemplo por tipo
+        const logMessages = {
+            information: [
+                "Sistema iniciado correctamente",
+                "Usuario autenticado exitosamente",
+                "Consulta de estudiantes completada",
+                "Backup de base de datos iniciado",
+                "Configuración cargada desde archivo",
+                "Conexión a base de datos establecida",
+                "Servicio de logging inicializado",
+                "Métricas de rendimiento recolectadas",
+                "Sesión de usuario creada",
+                "Recurso solicitado procesado"
+            ],
+            warning: [
+                "Uso de memoria alto detectado",
+                "Tiempo de respuesta lento en consulta",
+                "Conexión de base de datos inestable",
+                "Archivo de configuración no encontrado",
+                "Intento de acceso a recurso restringido",
+                "Sesión de usuario próxima a expirar",
+                "Espacio en disco bajo",
+                "Múltiples intentos de login fallidos",
+                "Consulta sin resultados",
+                "Parámetro opcional no proporcionado"
+            ],
+            error: [
+                "Error de conexión a base de datos",
+                "Excepción no manejada en controlador",
+                "Archivo no encontrado en el servidor",
+                "Error de autenticación JWT",
+                "Timeout en operación de base de datos",
+                "Error de validación de datos",
+                "Servicio externo no disponible",
+                "Error de serialización JSON",
+                "Permiso denegado para recurso",
+                "Error interno del servidor"
+            ],
+            security: [
+                "LOGIN_SUCCESS - Usuario autenticado",
+                "LOGIN_FAILED - Credenciales inválidas",
+                "INSCRIPCION_NO_AUTORIZADA - Acceso denegado",
+                "PERFIL_NO_AUTORIZADO - Sin permisos",
+                "LOGS_DASHBOARD_ACCESS - Acceso al dashboard",
+                "AUTH_TOKEN_EXPIRED - Token expirado",
+                "SECURITY_ALERT - Intento de acceso sospechoso",
+                "PASSWORD_CHANGE - Contraseña modificada",
+                "SESSION_TIMEOUT - Sesión expirada",
+                "ACCESS_DENIED - Acceso denegado a recurso"
+            ],
+            performance: [
+                "PERFORMANCE_SLOW_QUERY - Consulta lenta detectada",
+                "PERFORMANCE_TIMEOUT - Timeout en operación",
+                "PERFORMANCE_MEMORY_HIGH - Uso alto de memoria",
+                "PERFORMANCE_CPU_HIGH - CPU en uso elevado",
+                "PERFORMANCE_DISK_SLOW - Operación de disco lenta",
+                "PERFORMANCE_NETWORK_SLOW - Red lenta detectada",
+                "PERFORMANCE_CACHE_MISS - Cache miss en consulta",
+                "PERFORMANCE_DB_CONNECTION_POOL - Pool agotado",
+                "PERFORMANCE_GC_PRESSURE - Presión de garbage collection",
+                "PERFORMANCE_THREAD_BLOCKED - Thread bloqueado"
+            ],
+            audit: [
+                "AUDIT_CREATE - Estudiante creado",
+                "AUDIT_UPDATE - Perfil de estudiante actualizado",
+                "AUDIT_DELETE - Estudiante eliminado",
+                "AUDIT_LOGIN - Usuario inició sesión",
+                "AUDIT_LOGOUT - Usuario cerró sesión",
+                "AUDIT_PASSWORD_CHANGE - Contraseña cambiada",
+                "AUDIT_PERMISSION_GRANTED - Permiso otorgado",
+                "AUDIT_PERMISSION_REVOKED - Permiso revocado",
+                "AUDIT_DATA_EXPORT - Datos exportados",
+                "AUDIT_CONFIG_CHANGE - Configuración modificada"
+            ]
+        };
+
+        // Generar logs
+        async function generateLogs() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            const jwtToken = document.getElementById('jwtToken').value;
+            const logCount = parseInt(document.getElementById('logCount').value);
+            const userId = document.getElementById('userId').value;
+            const customMessage = document.getElementById('customMessage').value;
+            const ipAddress = document.getElementById('ipAddress').value;
+
+            if (!apiUrl) {
+                showResult('Error: URL de la API es requerida', 'danger');
+                return;
+            }
+
+            showResult('Generando logs...', 'info');
+
+            const messages = logMessages[selectedLogType];
+            const results = [];
+
+            for (let i = 0; i < logCount; i++) {
+                const message = customMessage || messages[Math.floor(Math.random() * messages.length)];
+                const level = getLevelForType(selectedLogType);
+                
+                try {
+                    const response = await fetch(`${apiUrl}/estudiantes`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...(jwtToken && { 'Authorization': `Bearer ${jwtToken}` })
+                        },
+                        body: JSON.stringify({
+                            nombre: `Test User ${i + 1}`,
+                            email: `test${i + 1}@example.com`,
+                            edad: 20 + (i % 10),
+                            carrera: 'Test Career',
+                            // Campos adicionales para logging
+                            _logLevel: level,
+                            _logMessage: message,
+                            _userId: userId,
+                            _ipAddress: ipAddress
+                        })
+                    });
+
+                    if (response.ok) {
+                        results.push({
+                            success: true,
+                            message: `Log ${i + 1}: ${message}`,
+                            level: level
+                        });
+                    } else {
+                        results.push({
+                            success: false,
+                            message: `Error en log ${i + 1}: ${response.statusText}`,
+                            level: level
+                        });
+                    }
+                } catch (error) {
+                    results.push({
+                        success: false,
+                        message: `Error en log ${i + 1}: ${error.message}`,
+                        level: level
+                    });
+                }
+
+                // Pequeña pausa entre requests
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            generatedLogs = results;
+            showResults(results);
+        }
+
+        // Generar todos los tipos
+        async function generateAllTypes() {
+            const types = Object.keys(logMessages);
+            let allResults = [];
+
+            for (const type of types) {
+                selectedLogType = type;
+                document.getElementById('logCount').value = '2'; // 2 logs por tipo
+                
+                showResult(`Generando logs de tipo: ${type}...`, 'info');
+                
+                const results = await generateLogsForType(type, 2);
+                allResults = allResults.concat(results);
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            generatedLogs = allResults;
+            showResults(allResults);
+        }
+
+        // Generar logs para un tipo específico
+        async function generateLogsForType(type, count) {
+            const apiUrl = document.getElementById('apiUrl').value;
+            const jwtToken = document.getElementById('jwtToken').value;
+            const userId = document.getElementById('userId').value;
+            const ipAddress = document.getElementById('ipAddress').value;
+
+            const messages = logMessages[type];
+            const results = [];
+
+            for (let i = 0; i < count; i++) {
+                const message = messages[Math.floor(Math.random() * messages.length)];
+                const level = getLevelForType(type);
+                
+                try {
+                    const response = await fetch(`${apiUrl}/estudiantes`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...(jwtToken && { 'Authorization': `Bearer ${jwtToken}` })
+                        },
+                        body: JSON.stringify({
+                            nombre: `Test ${type} ${i + 1}`,
+                            email: `test.${type}${i + 1}@example.com`,
+                            edad: 20 + (i % 10),
+                            carrera: 'Test Career',
+                            _logLevel: level,
+                            _logMessage: message,
+                            _userId: userId,
+                            _ipAddress: ipAddress
+                        })
+                    });
+
+                    results.push({
+                        success: response.ok,
+                        message: `[${type.toUpperCase()}] ${message}`,
+                        level: level
+                    });
+                } catch (error) {
+                    results.push({
+                        success: false,
+                        message: `[${type.toUpperCase()}] Error: ${error.message}`,
+                        level: level
+                    });
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            return results;
+        }
+
+        // Generar logs en bulk
+        async function generateBulkLogs() {
+            document.getElementById('logCount').value = '50';
+            await generateLogs();
+        }
+
+        // Obtener nivel de log para tipo
+        function getLevelForType(type) {
+            switch (type) {
+                case 'information': return 'Information';
+                case 'warning': return 'Warning';
+                case 'error': return 'Error';
+                case 'security': return 'Information';
+                case 'performance': return 'Warning';
+                case 'audit': return 'Information';
+                default: return 'Information';
+            }
+        }
+
+        // Mostrar resultado
+        function showResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.className = `alert alert-${type}`;
+            resultsDiv.textContent = message;
+        }
+
+        // Mostrar resultados detallados
+        function showResults(results) {
+            const successCount = results.filter(r => r.success).length;
+            const errorCount = results.filter(r => !r.success).length;
+            
+            showResult(`Generación completada: ${successCount} exitosos, ${errorCount} errores`, 
+                      errorCount === 0 ? 'success' : 'warning');
+
+            // Mostrar detalles
+            const logDetails = document.getElementById('logDetails');
+            const logList = document.getElementById('logList');
+            
+            logList.innerHTML = results.map((result, index) => `
+                <div class="mb-2 ${result.success ? 'text-success' : 'text-danger'}">
+                    <strong>${index + 1}.</strong> [${result.level}] ${result.message}
+                </div>
+            `).join('');
+            
+            logDetails.style.display = 'block';
+        }
+
+        // Abrir dashboard
+        function openDashboard() {
+            window.open('frontend/logs-dashboard.html', '_blank');
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Seleccionar el primer tipo por defecto
+            document.querySelector('.log-type-card').classList.add('selected');
+        });
+    </script>
+</body>
+</html> 

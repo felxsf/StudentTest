@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Dashboard de Logs</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .test-button { margin: 5px; padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        .test-button:hover { background: #0056b3; }
+        .result { margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 3px; }
+        .error { background: #f8d7da; color: #721c24; }
+        .success { background: #d4edda; color: #155724; }
+        .loading { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Dashboard de Logs</h1>
+    
+    <div class="test-section">
+        <h3>1. Verificar Token JWT</h3>
+        <button class="test-button" onclick="checkToken()">Verificar Token</button>
+        <div id="tokenResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Test Dashboard Stats</h3>
+        <button class="test-button" onclick="testDashboardStats()">Obtener Estadísticas</button>
+        <div id="dashboardResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Test Logs Recientes</h3>
+        <button class="test-button" onclick="testRecentLogs()">Obtener Logs Recientes</button>
+        <div id="recentResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4. Test Logs de Errores</h3>
+        <button class="test-button" onclick="testErrorLogs()">Obtener Logs de Errores</button>
+        <div id="errorResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>5. Test Búsqueda de Logs</h3>
+        <button class="test-button" onclick="testSearchLogs()">Buscar Logs</button>
+        <div id="searchResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>6. Test Exportación</h3>
+        <button class="test-button" onclick="testExportLogs()">Exportar Logs</button>
+        <div id="exportResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>7. Test Limpieza</h3>
+        <button class="test-button" onclick="testCleanupLogs()">Limpiar Logs (Test)</button>
+        <div id="cleanupResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://localhost:7259/api';
+        
+        function showResult(elementId, message, isError = false, isLoading = false) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = 'result ' + (isError ? 'error' : isLoading ? 'loading' : 'success');
+        }
+
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        async function makeRequest(url, options = {}) {
+            const token = getToken();
+            if (!token) {
+                throw new Error('No hay token JWT disponible');
+            }
+
+            const response = await fetch(url, {
+                ...options,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
+            }
+
+            return response;
+        }
+
+        async function checkToken() {
+            try {
+                const token = getToken();
+                if (!token) {
+                    showResult('tokenResult', '❌ No hay token JWT en localStorage', true);
+                    return;
+                }
+
+                // Decodificar el token para ver su contenido
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const now = Math.floor(Date.now() / 1000);
+                
+                if (payload.exp < now) {
+                    showResult('tokenResult', '❌ Token JWT expirado', true);
+                } else {
+                    showResult('tokenResult', `✅ Token válido - Usuario: ${payload.name}, Rol: ${payload.role}, Expira: ${new Date(payload.exp * 1000).toLocaleString()}`);
+                }
+            } catch (error) {
+                showResult('tokenResult', `❌ Error verificando token: ${error.message}`, true);
+            }
+        }
+
+        async function testDashboardStats() {
+            try {
+                showResult('dashboardResult', '⏳ Cargando estadísticas...', false, true);
+                const response = await makeRequest(`${API_BASE_URL}/logs/dashboard`);
+                const data = await response.json();
+                showResult('dashboardResult', `✅ Estadísticas obtenidas: ${JSON.stringify(data, null, 2)}`);
+            } catch (error) {
+                showResult('dashboardResult', `❌ Error: ${error.message}`, true);
+            }
+        }
+
+        async function testRecentLogs() {
+            try {
+                showResult('recentResult', '⏳ Cargando logs recientes...', false, true);
+                const response = await makeRequest(`${API_BASE_URL}/logs/recent?page=1&pageSize=5`);
+                const data = await response.json();
+                showResult('recentResult', `✅ Logs recientes obtenidos: ${data.logs?.length || 0} logs, Total: ${data.pagination?.totalCount || 0}`);
+            } catch (error) {
+                showResult('recentResult', `❌ Error: ${error.message}`, true);
+            }
+        }
+
+        async function testErrorLogs() {
+            try {
+                showResult('errorResult', '⏳ Cargando logs de errores...', false, true);
+                const response = await makeRequest(`${API_BASE_URL}/logs/errors?page=1&pageSize=5`);
+                const data = await response.json();
+                showResult('errorResult', `✅ Logs de errores obtenidos: ${data.logs?.length || 0} logs, Total: ${data.pagination?.totalCount || 0}`);
+            } catch (error) {
+                showResult('errorResult', `❌ Error: ${error.message}`, true);
+            }
+        }
+
+        async function testSearchLogs() {
+            try {
+                showResult('searchResult', '⏳ Buscando logs...', false, true);
+                const response = await makeRequest(`${API_BASE_URL}/logs/search?level=Error&page=1&pageSize=5`);
+                const data = await response.json();
+                showResult('searchResult', `✅ Búsqueda completada: ${data.logs?.length || 0} logs encontrados`);
+            } catch (error) {
+                showResult('searchResult', `❌ Error: ${error.message}`, true);
+            }
+        }
+
+        async function testExportLogs() {
+            try {
+                showResult('exportResult', '⏳ Exportando logs...', false, true);
+                const response = await makeRequest(`${API_BASE_URL}/logs/export?level=Error`, {
+                    responseType: 'blob'
+                });
+                
+                if (response.headers.get('content-type')?.includes('text/csv')) {
+                    const blob = await response.blob();
+                    showResult('exportResult', `✅ Exportación exitosa: ${blob.size} bytes`);
+                    
+                    // Crear descarga
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'test_logs_export.csv';
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    showResult('exportResult', '❌ Respuesta no es CSV', true);
+                }
+            } catch (error) {
+                showResult('exportResult', `❌ Error: ${error.message}`, true);
+            }
+        }
+
+        async function testCleanupLogs() {
+            try {
+                showResult('cleanupResult', '⏳ Probando limpieza (solo simulación)...', false, true);
+                const response = await makeRequest(`${API_BASE_URL}/logs/cleanup?daysToKeep=30`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                showResult('cleanupResult', `✅ Limpieza completada: ${JSON.stringify(data)}`);
+            } catch (error) {
+                showResult('cleanupResult', `❌ Error: ${error.message}`, true);
+            }
+        }
+
+        // Auto-check token al cargar
+        window.onload = function() {
+            checkToken();
+        };
+    </script>
+</body>
+</html> 
