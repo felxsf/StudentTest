@@ -227,7 +227,7 @@ const LogsDashboard: React.FC<LogsDashboardProps> = ({ onClose }) => {
               </p>
             </div>
             <div className="flex space-x-3">
-              <button
+              {/*<button
                 onClick={handleExport}
                 disabled={loading}
                 className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center"
@@ -246,7 +246,7 @@ const LogsDashboard: React.FC<LogsDashboardProps> = ({ onClose }) => {
                   <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
                 Limpiar
-              </button>
+              </button>*/}
               {onClose && (
                 <button
                   onClick={onClose}
@@ -269,11 +269,11 @@ const LogsDashboard: React.FC<LogsDashboardProps> = ({ onClose }) => {
           <nav className="flex space-x-1">
             {[
               { id: 'dashboard', name: 'Dashboard', icon: '📊', color: 'from-blue-500 to-blue-600' },
-              { id: 'recent', name: 'Recientes', icon: '🕒', color: 'from-green-500 to-green-600' },
+              /* { id: 'recent', name: 'Recientes', icon: '🕒', color: 'from-green-500 to-green-600' },
               { id: 'errors', name: 'Errores', icon: '⚠️', color: 'from-red-500 to-red-600' },
               { id: 'performance', name: 'Rendimiento', icon: '⚡', color: 'from-purple-500 to-purple-600' },
               { id: 'security', name: 'Seguridad', icon: '🔒', color: 'from-indigo-500 to-indigo-600' },
-              { id: 'search', name: 'Búsqueda', icon: '🔍', color: 'from-orange-500 to-orange-600' },
+              { id: 'search', name: 'Búsqueda', icon: '🔍', color: 'from-orange-500 to-orange-600' }, */
             ].map((tab) => (
               <button
                 key={tab.id}

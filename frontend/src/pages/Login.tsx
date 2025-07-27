@@ -124,7 +124,7 @@ const Login: React.FC = () => {
           </div>
 
           {/* Botón temporal para verificar administrador */}
-          <div className="text-center">
+          {/*<div className="text-center">
             <button
               type="button"
               onClick={checkAdmin}
@@ -132,7 +132,7 @@ const Login: React.FC = () => {
             >
               Verificar Administrador
             </button>
-          </div>
+          </div>*/}
 
           <div className="text-center">
             <Link
