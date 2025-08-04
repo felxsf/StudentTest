@@ -1,0 +1,193 @@
+/****** Object:  Database [StudentTestDB]    Script Date: 4/08/2025 10:26:45 a. m. ******/
+CREATE DATABASE [StudentTestDB]  (EDITION = 'GeneralPurpose', SERVICE_OBJECTIVE = 'GP_S_Gen5_2', MAXSIZE = 32 GB) WITH CATALOG_COLLATION = SQL_Latin1_General_CP1_CI_AS, LEDGER = OFF;
+GO
+ALTER DATABASE [StudentTestDB] SET COMPATIBILITY_LEVEL = 170
+GO
+ALTER DATABASE [StudentTestDB] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [StudentTestDB] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [StudentTestDB] SET ALLOW_SNAPSHOT_ISOLATION ON 
+GO
+ALTER DATABASE [StudentTestDB] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [StudentTestDB] SET READ_COMMITTED_SNAPSHOT ON 
+GO
+ALTER DATABASE [StudentTestDB] SET  MULTI_USER 
+GO
+ALTER DATABASE [StudentTestDB] SET ENCRYPTION ON
+GO
+ALTER DATABASE [StudentTestDB] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [StudentTestDB] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 100, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+GO
+/*** The scripts of database scoped configurations in Azure should be executed inside the target database connection. ***/
+GO
+-- ALTER DATABASE SCOPED CONFIGURATION SET MAXDOP = 8;
+GO
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 4/08/2025 10:26:46 a. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[__EFMigrationsHistory](
+	[MigrationId] [nvarchar](150) NOT NULL,
+	[ProductVersion] [nvarchar](32) NOT NULL,
+ CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED 
+(
+	[MigrationId] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Estudiantes]    Script Date: 4/08/2025 10:26:46 a. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Estudiantes](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Nombre] [nvarchar](max) NOT NULL,
+	[Correo] [nvarchar](450) NOT NULL,
+	[PasswordHash] [nvarchar](max) NOT NULL,
+	[Rol] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_Estudiantes] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Inscripciones]    Script Date: 4/08/2025 10:26:46 a. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Inscripciones](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[EstudianteId] [uniqueidentifier] NOT NULL,
+	[MateriaId] [int] NOT NULL,
+ CONSTRAINT [PK_Inscripciones] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Logs]    Script Date: 4/08/2025 10:26:46 a. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Logs](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Message] [nvarchar](max) NULL,
+	[MessageTemplate] [nvarchar](max) NULL,
+	[Level] [nvarchar](max) NULL,
+	[TimeStamp] [datetime] NULL,
+	[Exception] [nvarchar](max) NULL,
+	[CorrelationId] [nvarchar](50) NULL,
+	[UserId] [nvarchar](100) NULL,
+	[IpAddress] [nvarchar](45) NULL,
+	[UserAgent] [nvarchar](500) NULL,
+ CONSTRAINT [PK_Logs] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Materias]    Script Date: 4/08/2025 10:26:46 a. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Materias](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Nombre] [nvarchar](max) NOT NULL,
+	[Creditos] [int] NOT NULL,
+	[ProfesorId] [int] NOT NULL,
+ CONSTRAINT [PK_Materias] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Profesores]    Script Date: 4/08/2025 10:26:46 a. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Profesores](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Nombre] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_Profesores] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [IX_Estudiantes_Correo]    Script Date: 4/08/2025 10:26:46 a. m. ******/
+CREATE UNIQUE NONCLUSTERED INDEX [IX_Estudiantes_Correo] ON [dbo].[Estudiantes]
+(
+	[Correo] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Inscripciones_EstudianteId]    Script Date: 4/08/2025 10:26:46 a. m. ******/
+CREATE NONCLUSTERED INDEX [IX_Inscripciones_EstudianteId] ON [dbo].[Inscripciones]
+(
+	[EstudianteId] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Inscripciones_MateriaId]    Script Date: 4/08/2025 10:26:46 a. m. ******/
+CREATE NONCLUSTERED INDEX [IX_Inscripciones_MateriaId] ON [dbo].[Inscripciones]
+(
+	[MateriaId] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Materias_ProfesorId]    Script Date: 4/08/2025 10:26:46 a. m. ******/
+CREATE NONCLUSTERED INDEX [IX_Materias_ProfesorId] ON [dbo].[Materias]
+(
+	[ProfesorId] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Inscripciones]  WITH CHECK ADD  CONSTRAINT [FK_Inscripciones_Estudiantes_EstudianteId] FOREIGN KEY([EstudianteId])
+REFERENCES [dbo].[Estudiantes] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Inscripciones] CHECK CONSTRAINT [FK_Inscripciones_Estudiantes_EstudianteId]
+GO
+ALTER TABLE [dbo].[Inscripciones]  WITH CHECK ADD  CONSTRAINT [FK_Inscripciones_Materias_MateriaId] FOREIGN KEY([MateriaId])
+REFERENCES [dbo].[Materias] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Inscripciones] CHECK CONSTRAINT [FK_Inscripciones_Materias_MateriaId]
+GO
+ALTER TABLE [dbo].[Materias]  WITH CHECK ADD  CONSTRAINT [FK_Materias_Profesores_ProfesorId] FOREIGN KEY([ProfesorId])
+REFERENCES [dbo].[Profesores] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Materias] CHECK CONSTRAINT [FK_Materias_Profesores_ProfesorId]
+GO
+ALTER DATABASE [StudentTestDB] SET  READ_WRITE 
+GO
